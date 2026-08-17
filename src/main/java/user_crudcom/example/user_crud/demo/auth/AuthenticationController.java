@@ -53,7 +53,8 @@ public class AuthenticationController {
 
         String encryptedPassword = passwordEncoder.encode(dto.password());
 
-        User newUser = new User(dto.name(), dto.email(), encryptedPassword, dto.phone(), UserRole.CLIENT);
+        User newUser = new User(dto.name(), dto.cpf(), dto.email(), encryptedPassword, dto.birthDate(),
+                dto.phone(), UserRole.CLIENT);
         this.userRepository.save(newUser);
 
         return  ResponseEntity.ok().build();
