@@ -2,8 +2,10 @@ package user_crudcom.example.user_crud.demo.auth;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import user_crudcom.example.user_crud.demo.exceptions.EmailAlreadyExistsException;
+import user_crudcom.example.user_crud.demo.security.RestErrorMessage;
 import user_crudcom.example.user_crud.demo.user.User;
 import user_crudcom.example.user_crud.demo.user.UserRepository;
 import user_crudcom.example.user_crud.demo.user.UserRole;
@@ -34,11 +37,20 @@ public class AuthenticationController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO dto){
-        var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
-        var auth = authenticationManager.authenticate(usernamePassword);
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO dto){
+        try{
+            var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
+            var auth = authenticationManager.authenticate(usernamePassword);
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+            return ResponseEntity.ok(new LoginResponseDTO(token));
+        }catch (BadCredentialsException e){
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new RestErrorMessage(
+                            HttpStatus.UNAUTHORIZED,
+                            "E-mail ou senha inválidos"
+                    ));
+        }
     }
 
     @PostMapping("/register")

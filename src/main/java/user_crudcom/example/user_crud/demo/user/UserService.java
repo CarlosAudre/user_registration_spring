@@ -14,6 +14,7 @@ public class UserService {
     public List<UserDTO> getAllUsers(){
         return userRepository.findAll().stream().map((user ->
                 new UserDTO(
+                        user.getId(),
                         user.getName(),
                         user.getEmail(),
                         user.getCpf(),
@@ -23,7 +24,7 @@ public class UserService {
                         ))).toList();
     }
 
-    public UserDTO updateUser(Long id, UserDTO dto){
+    public UserDTO updateUser(Long id, UpdateUserDTO dto){
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -34,6 +35,7 @@ public class UserService {
 
         userRepository.save(user);
         return new UserDTO(
+                user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getCpf(),

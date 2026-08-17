@@ -20,7 +20,7 @@ public class AdmController {
     @PutMapping("/{id}")
     ResponseEntity<UserDTO> updateUser(
             @PathVariable("id") Long id,
-            @RequestBody @Valid UserDTO dto
+            @RequestBody @Valid UpdateUserDTO dto
     ){
         return ResponseEntity.ok(userService.updateUser(id, dto));
     }
