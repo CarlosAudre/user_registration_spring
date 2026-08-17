@@ -26,7 +26,7 @@ API REST para gerenciamento de usuários, desenvolvida com Java e Spring Boot.
 Clone o repositório:
 
 ~~~bash
-git clone https://github.com/CarlosAudre/user_registration_react.git
+git clone https://github.com/CarlosAudre/user_registration_spring/tree/master
 ~~~
 
 Acesse a pasta do projeto:
